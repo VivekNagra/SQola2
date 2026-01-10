@@ -111,4 +111,164 @@ public sealed class TodoServiceTests
 
         Assert.False(tasks.Contains(task.Id));
     }
+
+    [Fact]
+public async Task CreateListAsync_WhenNameHasWhitespace_TrimsName()
+{
+    var (sut, _, _, _) = CreateSut();
+
+    var list = await sut.CreateListAsync("  Work  ");
+
+    Assert.Equal("Work", list.Name);
+    Assert.NotEqual(Guid.Empty, list.Id);
 }
+
+[Fact]
+public async Task CreateListAsync_WhenNameIsEmpty_ThrowsValidationException()
+{
+    var (sut, _, _, _) = CreateSut();
+
+    await Assert.ThrowsAsync<ValidationException>(() => sut.CreateListAsync("   "));
+}
+
+[Fact]
+public async Task MarkTaskInProgressAsync_WhenTaskExists_SetsIsCompletedFalse()
+{
+    var (sut, lists, tasks, _) = CreateSut();
+    var list = new TaskList("Work");
+    lists.Seed(list);
+
+    var task = new TodoTask(list.Id, "Test");
+    task.MarkCompleted();
+    tasks.Seed(task);
+
+    await sut.MarkTaskInProgressAsync(task.Id);
+
+    var updated = await tasks.GetByIdAsync(task.Id);
+    Assert.NotNull(updated);
+    Assert.False(updated!.IsCompleted);
+}
+
+[Fact]
+public async Task MoveTaskToListAsync_WhenNewListExists_UpdatesListId()
+{
+    var (sut, lists, tasks, _) = CreateSut();
+
+    var fromList = new TaskList("From");
+    var toList = new TaskList("To");
+    lists.Seed(fromList);
+    lists.Seed(toList);
+
+    var task = new TodoTask(fromList.Id, "Move me");
+    tasks.Seed(task);
+
+    await sut.MoveTaskToListAsync(task.Id, toList.Id);
+
+    var updated = await tasks.GetByIdAsync(task.Id);
+    Assert.NotNull(updated);
+    Assert.Equal(toList.Id, updated!.ListId);
+}
+
+[Fact]
+public async Task DeleteTaskAsync_WhenTaskDoesNotExist_DoesNotThrow()
+{
+    var (sut, _, _, _) = CreateSut();
+
+    var missingTaskId = Guid.NewGuid();
+
+    var ex = await Record.ExceptionAsync(() => sut.DeleteTaskAsync(missingTaskId));
+    Assert.Null(ex);
+}
+
+[Fact]
+public async Task CreateListAsync_CallsAddAndSaveChanges()
+{
+    var tasks = new Todo.UnitTests.Spies.SpyTaskRepository();
+    var lists = new Todo.UnitTests.Spies.SpyListRepository();
+    var clock = new Todo.UnitTests.Stubs.StubClock { UtcNow = new DateTimeOffset(2026, 01, 10, 12, 0, 0, TimeSpan.Zero) };
+
+    var sut = new Todo.Application.Services.TodoService(lists, tasks, clock);
+
+    await sut.CreateListAsync("SpyList");
+
+    Assert.Equal(1, lists.AddCalls);
+    Assert.Equal(1, lists.SaveChangesCalls);
+}
+
+[Fact]
+public async Task CreateTaskAsync_CallsAddAndSaveChanges()
+{
+    var tasks = new Todo.UnitTests.Spies.SpyTaskRepository();
+    var lists = new Todo.UnitTests.Spies.SpyListRepository();
+    var clock = new Todo.UnitTests.Stubs.StubClock { UtcNow = new DateTimeOffset(2026, 01, 10, 12, 0, 0, TimeSpan.Zero) };
+
+    var sut = new Todo.Application.Services.TodoService(lists, tasks, clock);
+
+    var list = new Todo.Domain.Entities.TaskList("Spy");
+    lists.Seed(list);
+
+    await sut.CreateTaskAsync(list.Id, "SpyTask");
+
+    Assert.Equal(1, tasks.AddCalls);
+    Assert.Equal(1, tasks.SaveChangesCalls);
+}
+
+[Fact]
+public async Task MarkTaskCompletedAsync_CallsSaveChanges()
+{
+    var tasks = new Todo.UnitTests.Spies.SpyTaskRepository();
+    var lists = new Todo.UnitTests.Spies.SpyListRepository();
+    var clock = new Todo.UnitTests.Stubs.StubClock { UtcNow = new DateTimeOffset(2026, 01, 10, 12, 0, 0, TimeSpan.Zero) };
+
+    var sut = new Todo.Application.Services.TodoService(lists, tasks, clock);
+
+    var list = new Todo.Domain.Entities.TaskList("Spy");
+    lists.Seed(list);
+
+    var task = new Todo.Domain.Entities.TodoTask(list.Id, "Complete me");
+    tasks.Seed(task);
+
+    await sut.MarkTaskCompletedAsync(task.Id);
+
+    Assert.True(task.IsCompleted);
+    Assert.Equal(1, tasks.SaveChangesCalls);
+}
+
+[Fact]
+public async Task SetTaskDeadlineAsync_WhenDeadlineEqualsNow_DoesNotThrow()
+{
+    var (sut, lists, tasks, clock) = CreateSut();
+    var list = new TaskList("Work");
+    lists.Seed(list);
+
+    var task = new TodoTask(list.Id, "Deadline boundary");
+    tasks.Seed(task);
+
+    var ex = await Record.ExceptionAsync(() => sut.SetTaskDeadlineAsync(task.Id, clock.UtcNow));
+    Assert.Null(ex);
+
+    var updated = await tasks.GetByIdAsync(task.Id);
+    Assert.Equal(clock.UtcNow, updated!.Deadline);
+}
+
+[Fact]
+public async Task MoveTaskToListAsync_WhenNewListIsMissing_ThrowsNotFoundException()
+{
+    var (sut, lists, tasks, _) = CreateSut();
+
+    var fromList = new TaskList("From");
+    lists.Seed(fromList);
+
+    var task = new TodoTask(fromList.Id, "Move me");
+    tasks.Seed(task);
+
+    var missingListId = Guid.NewGuid();
+
+    await Assert.ThrowsAsync<NotFoundException>(() =>
+        sut.MoveTaskToListAsync(task.Id, missingListId));
+}
+
+
+}
+
+
