@@ -3,6 +3,14 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
+# Coverage outputs (generated reports)
+docs/**/coverage/**
+
+# If you generate HTML reports elsewhere, add the specific folder too, e.g.:
+# coverage-report/
+# docs/**/report/**
+
+
 # dotenv files
 .env
 

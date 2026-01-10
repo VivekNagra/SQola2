@@ -3,7 +3,7 @@ using Todo.Domain.Entities;
 using Todo.Domain.Exceptions;
 using Todo.UnitTests.Fakes;
 using Todo.UnitTests.Stubs;
-using Xunit;
+//using Xunit;
 
 namespace Todo.UnitTests.Services;
 
@@ -31,7 +31,7 @@ public sealed class TodoServiceTests
         var list = new TaskList("School");
         lists.Seed(list);
 
-        var task = await sut.CreateTaskAsync(list.Id, "Finish report");
+        var task = await sut.CreateTaskAsync(list.Id, "Finish report", "Complete the report for school submission.");
 
         Assert.Equal(list.Id, task.ListId);
         Assert.Equal("Finish report", task.Title);
@@ -50,7 +50,7 @@ public sealed class TodoServiceTests
         var missingListId = Guid.NewGuid();
 
         var ex = await Assert.ThrowsAsync<NotFoundException>(() =>
-            sut.CreateTaskAsync(missingListId, "Task title"));
+            sut.CreateTaskAsync(missingListId, "Task title", "Task description"));
 
         Assert.Contains(missingListId.ToString(), ex.Message);
     }
@@ -65,7 +65,7 @@ public sealed class TodoServiceTests
         var list = new TaskList("Home");
         lists.Seed(list);
 
-        var task = new TodoTask(list.Id, "Old title");
+        var task = new TodoTask(list.Id, "Old title", "Old description");
         tasks.Seed(task);
 
         await sut.UpdateTaskTitleAsync(task.Id, "  New title  ");
@@ -85,7 +85,7 @@ public sealed class TodoServiceTests
         var list = new TaskList("Work");
         lists.Seed(list);
 
-        var task = new TodoTask(list.Id, "Submit timesheet");
+        var task = new TodoTask(list.Id, "Submit timesheet", "Submit the timesheet for this week");
         tasks.Seed(task);
 
         var pastDeadline = clock.UtcNow.AddMinutes(-1);
@@ -104,7 +104,7 @@ public sealed class TodoServiceTests
         var list = new TaskList("Admin");
         lists.Seed(list);
 
-        var task = new TodoTask(list.Id, "Clean up");
+        var task = new TodoTask(list.Id, "Clean up", "Clean up the room bruv");
         tasks.Seed(task);
 
         await sut.DeleteTaskAsync(task.Id);
@@ -138,7 +138,7 @@ public async Task MarkTaskInProgressAsync_WhenTaskExists_SetsIsCompletedFalse()
     var list = new TaskList("Work");
     lists.Seed(list);
 
-    var task = new TodoTask(list.Id, "Test");
+    var task = new TodoTask(list.Id, "Test", "Test description");
     task.MarkCompleted();
     tasks.Seed(task);
 
@@ -159,7 +159,7 @@ public async Task MoveTaskToListAsync_WhenNewListExists_UpdatesListId()
     lists.Seed(fromList);
     lists.Seed(toList);
 
-    var task = new TodoTask(fromList.Id, "Move me");
+    var task = new TodoTask(fromList.Id, "Move me", "Move this task to another list");
     tasks.Seed(task);
 
     await sut.MoveTaskToListAsync(task.Id, toList.Id);
@@ -207,7 +207,7 @@ public async Task CreateTaskAsync_CallsAddAndSaveChanges()
     var list = new Todo.Domain.Entities.TaskList("Spy");
     lists.Seed(list);
 
-    await sut.CreateTaskAsync(list.Id, "SpyTask");
+    await sut.CreateTaskAsync(list.Id, "SpyTask", "Spy task description");
 
     Assert.Equal(1, tasks.AddCalls);
     Assert.Equal(1, tasks.SaveChangesCalls);
@@ -225,7 +225,7 @@ public async Task MarkTaskCompletedAsync_CallsSaveChanges()
     var list = new Todo.Domain.Entities.TaskList("Spy");
     lists.Seed(list);
 
-    var task = new Todo.Domain.Entities.TodoTask(list.Id, "Complete me");
+    var task = new Todo.Domain.Entities.TodoTask(list.Id, "Complete me", "Complete the task");
     tasks.Seed(task);
 
     await sut.MarkTaskCompletedAsync(task.Id);
@@ -241,7 +241,7 @@ public async Task SetTaskDeadlineAsync_WhenDeadlineEqualsNow_DoesNotThrow()
     var list = new TaskList("Work");
     lists.Seed(list);
 
-    var task = new TodoTask(list.Id, "Deadline boundary");
+    var task = new TodoTask(list.Id, "Deadline boundary", "Deadline boundary task");
     tasks.Seed(task);
 
     var ex = await Record.ExceptionAsync(() => sut.SetTaskDeadlineAsync(task.Id, clock.UtcNow));
@@ -259,7 +259,7 @@ public async Task MoveTaskToListAsync_WhenNewListIsMissing_ThrowsNotFoundExcepti
     var fromList = new TaskList("From");
     lists.Seed(fromList);
 
-    var task = new TodoTask(fromList.Id, "Move me");
+    var task = new TodoTask(fromList.Id, "Move me", "Move this task to another list");
     tasks.Seed(task);
 
     var missingListId = Guid.NewGuid();

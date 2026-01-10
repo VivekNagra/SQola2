@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Todo.Application.Services;
 using Todo.Infrastructure.Persistence;
 using Todo.IntegrationTests.Infrastructure;
-using Xunit;
+//using Xunit;
 
 namespace Todo.IntegrationTests;
 
@@ -20,7 +20,7 @@ public sealed class TodoPersistenceIntegrationTests : IClassFixture<TodoApiFacto
         var db = scope.ServiceProvider.GetRequiredService<TodoDbContext>();
 
         var list = await service.CreateListAsync("Integration");
-        var created = await service.CreateTaskAsync(list.Id, "Persist me");
+        var created = await service.CreateTaskAsync(list.Id, "Persist me", "Persist this task");
 
         var readBack = await db.Tasks.FindAsync(created.Id);
 
@@ -39,7 +39,7 @@ public sealed class TodoPersistenceIntegrationTests : IClassFixture<TodoApiFacto
         var db = scope.ServiceProvider.GetRequiredService<TodoDbContext>();
 
         var list = await service.CreateListAsync("Integration2");
-        var task = await service.CreateTaskAsync(list.Id, "Complete me");
+        var task = await service.CreateTaskAsync(list.Id, "Complete me", "Please complete me");
 
         await service.MarkTaskCompletedAsync(task.Id);
 

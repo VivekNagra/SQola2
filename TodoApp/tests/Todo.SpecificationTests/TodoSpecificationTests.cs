@@ -2,7 +2,7 @@ using System.Net.Http.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Todo.Infrastructure.Persistence;
 using Todo.SpecificationTests.Infrastructure;
-using Xunit;
+//using Xunit;
 
 namespace Todo.SpecificationTests;
 
@@ -28,7 +28,8 @@ public sealed class TodoSpecificationTests : IClassFixture<TodoApiFactory>
         var createTaskResp = await client.PostAsJsonAsync("/tasks", new
         {
             listId = createdList!.Id,
-            title = "Write specification test"
+            title = "Write specification test",
+            description = "Write the specification test for creating and completing a task"
         });
         createTaskResp.EnsureSuccessStatusCode();
 
@@ -46,6 +47,7 @@ public sealed class TodoSpecificationTests : IClassFixture<TodoApiFactory>
         Assert.NotNull(task);
         Assert.True(task!.IsCompleted);
         Assert.Equal("Write specification test", task.Title);
+        Assert.Equal("Write the specification test for creating and completing a task", task.Description);
         Assert.Equal(createdList.Id, task.ListId);
     }
 

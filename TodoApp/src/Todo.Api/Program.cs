@@ -52,12 +52,13 @@ app.MapPost("/tasks", async (TodoService service, CreateTaskRequest req) =>
 {
     try
     {
-        var task = await service.CreateTaskAsync(req.ListId, req.Title);
+        var task = await service.CreateTaskAsync(req.ListId, req.Title, req.Description);
         return Results.Created($"/tasks/{task.Id}", new
         {
             task.Id,
             task.ListId,
             task.Title,
+            task.Description,
             task.IsCompleted,
             task.Deadline
         });
@@ -162,7 +163,7 @@ app.Run();
 public partial class Program { }
 
 public sealed record CreateListRequest(string Name);
-public sealed record CreateTaskRequest(Guid ListId, string Title);
+public sealed record CreateTaskRequest(Guid ListId, string Title, string Description);
 public sealed record UpdateTaskTitleRequest(string Title);
 public sealed record SetDeadlineRequest(DateTimeOffset? Deadline);
 public sealed record MoveTaskRequest(Guid ListId);

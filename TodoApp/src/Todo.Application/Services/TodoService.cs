@@ -25,13 +25,13 @@ public sealed class TodoService
         return list;
     }
 
-    public async Task<TodoTask> CreateTaskAsync(Guid listId, string title, CancellationToken ct = default)
+    public async Task<TodoTask> CreateTaskAsync(Guid listId, string title, string description, CancellationToken ct = default)
     {
         var list = await _lists.GetByIdAsync(listId, ct);
         if (list is null)
             throw new NotFoundException($"List '{listId}' was not found.");
 
-        var task = new TodoTask(listId, title);
+        var task = new TodoTask(listId, title, description);
         await _tasks.AddAsync(task, ct);
         await _tasks.SaveChangesAsync(ct);
         return task;

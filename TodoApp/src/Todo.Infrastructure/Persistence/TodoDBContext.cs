@@ -27,6 +27,7 @@ public sealed class TodoDbContext : DbContext
             b.HasKey(x => x.Id);
 
             b.Property(x => x.Title).IsRequired().HasMaxLength(200);
+            b.Property(x => x.Description).IsRequired().HasMaxLength(2000);
             b.Property(x => x.IsCompleted).IsRequired();
             b.Property(x => x.Deadline);
 
