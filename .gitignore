@@ -7,7 +7,11 @@
 docs/**/coverage/raw/**
 docs/**/coverage/report/**
 TodoApp/docs/**/coverage/report/**
+!docs/assignment3/coverage/
+!docs/assignment3/coverage/**
+docs/assignment3/coverage/*
 !docs/assignment3/coverage/coverage.cobertura.xml
+
 
 
 
