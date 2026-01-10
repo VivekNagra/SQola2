@@ -3,12 +3,12 @@
 ##
 ## Get latest from `dotnet new gitignore`
 
-# Coverage outputs (generated reports)
-#docs/**/coverage/**
-#excl. cover which is needed for prrof of assignment 3. 
-#!docs/**/coverage/**/coverage.cobertura.xml
-# coverage-report/
-# docs/**/report/**
+# Coverage output (generated)
+docs/**/coverage/raw/**
+docs/**/coverage/report/**
+TodoApp/docs/**/coverage/report/**
+!docs/assignment3/coverage/coverage.cobertura.xml
+
 
 
 # dotenv files
