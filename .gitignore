@@ -5,8 +5,8 @@
 
 # Coverage outputs (generated reports)
 docs/**/coverage/**
-
-# If you generate HTML reports elsewhere, add the specific folder too, e.g.:
+#excl. cover which is needed for prrof of assignment 3. 
+!docs/**/coverage/**/coverage.cobertura.xml
 # coverage-report/
 # docs/**/report/**
 
