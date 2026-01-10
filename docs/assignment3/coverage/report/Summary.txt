@@ -1,0 +1,71 @@
+Summary
+  Generated on: 10/01/2026 - 23.57.46
+  Parser: Cobertura
+  Assemblies: 7
+  Classes: 38
+  Files: 28
+  Line coverage: 34.7%
+  Covered lines: 649
+  Uncovered lines: 1219
+  Coverable lines: 1868
+  Total lines: 3077
+  Branch coverage: 10.3% (73 of 706)
+  Covered branches: 73
+  Total branches: 706
+  Method coverage: 52.3% (167 of 319)
+  Full method coverage: 46.7% (149 of 319)
+  Covered methods: 167
+  Fully covered methods: 149
+  Total methods: 319
+
+Todo.Api                                                       15.1%
+  CreateListRequest                                             100%
+  CreateTaskRequest                                             100%
+  Microsoft.AspNetCore.OpenApi.Generated                          0%
+  MoveTaskRequest                                                 0%
+  Program                                                      56.7%
+  SetDeadlineRequest                                              0%
+  System.Runtime.CompilerServices                                 0%
+  UpdateTaskTitleRequest                                          0%
+
+Todo.Application                                               92.6%
+  Todo.Application.Services.TodoService                        92.6%
+
+Todo.Domain                                                    85.8%
+  Todo.Domain.Entities.TaskList                                77.7%
+  Todo.Domain.Entities.TodoTask                                87.7%
+  Todo.Domain.Exceptions.DomainException                        100%
+  Todo.Domain.Exceptions.NotFoundException                      100%
+  Todo.Domain.Exceptions.ValidationException                    100%
+
+Todo.Infrastructure                                            88.8%
+  Todo.Infrastructure.Persistence.TodoDbContext                 100%
+  Todo.Infrastructure.Repositories.ListRepository               100%
+  Todo.Infrastructure.Repositories.TaskRepository                60%
+  Todo.Infrastructure.SystemClock                                 0%
+
+Todo.IntegrationTests                                          13.7%
+  Microsoft.AspNetCore.OpenApi.Generated                          0%
+  System.Runtime.CompilerServices                                 0%
+  Todo.IntegrationTests.Infrastructure.TodoApiFactory           100%
+  Todo.IntegrationTests.TodoPersistenceIntegrationTests         100%
+  Todo.IntegrationTests.UnitTest1                               100%
+
+Todo.SpecificationTests                                        14.5%
+  Microsoft.AspNetCore.OpenApi.Generated                          0%
+  System.Runtime.CompilerServices                                 0%
+  Todo.SpecificationTests.Infrastructure.TodoApiFactory         100%
+  Todo.SpecificationTests.TodoSpecificationTests                100%
+  Todo.SpecificationTests.TodoSpecificationTests.CreatedList    100%
+  Todo.SpecificationTests.TodoSpecificationTests.CreatedTask    100%
+  Todo.SpecificationTests.UnitTest1                             100%
+
+Todo.UnitTests                                                 97.8%
+  Todo.UnitTests.Fakes.FakeListRepository                       100%
+  Todo.UnitTests.Fakes.FakeTaskRepository                       100%
+  Todo.UnitTests.Services.TodoServiceMoqEpBvaTests              100%
+  Todo.UnitTests.Services.TodoServiceTests                      100%
+  Todo.UnitTests.Spies.SpyListRepository                        100%
+  Todo.UnitTests.Spies.SpyTaskRepository                       73.9%
+  Todo.UnitTests.Stubs.StubClock                                100%
+  Todo.UnitTests.UnitTest1                                      100%

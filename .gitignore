@@ -4,9 +4,9 @@
 ## Get latest from `dotnet new gitignore`
 
 # Coverage outputs (generated reports)
-docs/**/coverage/**
+#docs/**/coverage/**
 #excl. cover which is needed for prrof of assignment 3. 
-!docs/**/coverage/**/coverage.cobertura.xml
+#!docs/**/coverage/**/coverage.cobertura.xml
 # coverage-report/
 # docs/**/report/**
 
