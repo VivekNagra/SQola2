@@ -494,3 +494,8 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Allow committing the single stable Cobertura output for submission
+!docs/assignment3/coverage/
+!docs/assignment3/coverage/**
+!docs/assignment3/coverage/coverage.cobertura.xml
