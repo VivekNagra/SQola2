@@ -1,5 +1,7 @@
 # TodoApp — Software Quality (OLA2)
-## Please check ola3 branch for assignment 3 soloution. :)
+----
+## Please check **ola3** branch for assignment 3 soloution. :)
+----
 
 This repository contains my OLA2 solution for the Software Quality course at Erhvervsakademi København. The project is a small .NET Todo backend where the main focus is demonstrating a realistic testing approach across unit, integration, and specification-based tests, supported by mutation testing.
 
